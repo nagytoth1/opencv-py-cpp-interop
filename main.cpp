@@ -17,7 +17,7 @@ cv::Mat load_and_display_image(const std::string &imagePath)
     return image;
 }
 
-PYBIND11_MODULE(my_image_module, m)
+PYBIND11_MODULE(myocr, m)
 {
     m.def("load_and_display_image", &load_and_display_image, "A function to load and display an image.");
 }
