@@ -38,6 +38,5 @@ py::array_t<uint8_t> process_image(const std::string &imagePath)
 
 PYBIND11_MODULE(myocr, m)
 {
-    m.def("process_image", &process_image, "A function to load and display an image.");
-    m.def("mat_to_numpy", &mat_to_numpy);
+    m.def("process_image", &process_image, "A function to load and process an image");
 }
