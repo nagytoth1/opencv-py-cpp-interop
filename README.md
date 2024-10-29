@@ -41,7 +41,7 @@ cmake --build .\build
 cmake --build .\build --config Release
 ```
 
-You can find out your specific `pybind_python_installation_path` by using command python -m pybind11 --includes it will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
+You can find out your specific `pybind_path` by using command python -m pybind11 --includes it will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
 You need to copy the path without the -I flag
 
 # Environment
