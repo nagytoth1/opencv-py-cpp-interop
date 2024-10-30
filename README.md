@@ -44,6 +44,15 @@ cmake --build .\build --config Release
 You can find out your specific `pybind_path` by using command python -m pybind11 --includes it will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
 You need to copy the path without the -I flag
 
+## Generate stub for the compiled module
+
+Using mypy package we can utilize stubgen command to make a stub for the package to have the benefits of type hinting and intellisense in Python.
+
+```bash
+# generate calculations_cpp.pyi into the build directory
+stubgen -m build.calculations_cpp -o .
+```
+
 # Environment
 
 This project has been tested with following setup:
