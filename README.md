@@ -60,6 +60,7 @@ Failed to import, skipping with error: DLL load failed while importing myocr: Th
 
 This means the myocr module misses the OpenCV DLL files. I have managed to resolve this issue just by copying over the .dll and .pdb files from the bin directory of the OpenCV installation path (<opencv_path>\build\x64\vc16\bin) starting with `opencv_world` to the directory where the `myocr` module is located (in my case it was `build\Debug`).
 
+After doing this you are able to run the main.py script with `python main.py` command.
 
 ## Generate stub for the compiled myocr module
 
