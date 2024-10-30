@@ -50,6 +50,17 @@ python -m pybind11 --includes
 The output will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
 You need to copy the path without the `-I` prefix and the `include` part at the end.
 
+## Run the code
+
+When you first try to run the application with `python main.py` you may see the following error coming up, preventing you to launch the application:
+
+```
+Failed to import, skipping with error: DLL load failed while importing myocr: The specified module could not be found.
+```
+
+This means the myocr module misses the OpenCV DLL files. I have managed to resolve this issue just by copying over the .dll and .pdb files from the bin directory of the OpenCV installation path (<opencv_path>\build\x64\vc16\bin) starting with `opencv_world` to the directory where the `myocr` module is located (in my case it was `build\Debug`).
+
+
 ## Generate stub for the compiled myocr module
 
 By installing the `mypy` Python package with `pip install mypy` we can use the `stubgen` command to make a stub for the module to have the benefits of type hinting and intellisense in Python.
