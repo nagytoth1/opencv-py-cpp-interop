@@ -41,16 +41,22 @@ cmake --build .\build
 cmake --build .\build --config Release
 ```
 
-You can find out your specific `pybind_path` by using command python -m pybind11 --includes it will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
-You need to copy the path without the -I flag
-
-## Generate stub for the compiled module
-
-Using mypy package we can utilize stubgen command to make a stub for the package to have the benefits of type hinting and intellisense in Python.
+You can find out your specific Pybind11 installation path (`pybind_path`) by using following command: 
 
 ```bash
-# generate calculations_cpp.pyi into the build directory
-stubgen -m build.calculations_cpp -o .
+python -m pybind11 --includes
+```
+
+The output will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
+You need to copy the path without the `-I` prefix and the `include` part at the end.
+
+## Generate stub for the compiled myocr module
+
+By installing the `mypy` Python package with `pip install mypy` we can use the `stubgen` command to make a stub for the module to have the benefits of type hinting and intellisense in Python.
+
+```bash
+# generate calculations_cpp.pyi from the myocr module into the build directory
+stubgen -m build.Debug.myocr -o .
 ```
 
 # Environment
