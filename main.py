@@ -11,7 +11,7 @@ args = parser.parse_args()
 start_time = time.time()
 
 # Run the function
-processed_image = myocr.process_image_v2(args.input)
+processed_image = myocr.process_image_v2(args.input, "temp2")
 
 # Calculate the elapsed time
 elapsed_time = time.time() - start_time

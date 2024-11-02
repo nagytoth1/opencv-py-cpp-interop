@@ -97,36 +97,51 @@ py::array_t<uint8_t> mat_to_numpy(const cv::Mat &mat)
     return result;
 }
 
-py::array_t<uint8_t> process_image(const std::string &imagePath)
+py::array_t<uint8_t> process_image(const std::string &imagePath, const std::string &output_directory = "temp")
 {
     cv::Mat original_image = cv::imread(imagePath, cv::IMREAD_COLOR);
     if (original_image.empty())
     {
         throw std::runtime_error("Could not open or find the image!");
     }
+
+    std::stringstream path_stream;
+
     std::cout << "1. grayscaling image" << std::endl;
     cv::Mat gray_image;
     cv::cvtColor(original_image, gray_image, cv::COLOR_BGR2GRAY);
-    cv::imwrite("./temp/gray.jpg", gray_image);
+    path_stream << output_directory << "/gray.jpg";
+    cv::imwrite(path_stream.str(), gray_image);
+    path_stream.str("");
+
     std::cout << "2. making black and white image" << std::endl;
     cv::Mat binarized_image = threshold_image(gray_image, 210, 230);
-    cv::imwrite("./temp/bw_image.jpg", binarized_image);
+    path_stream << output_directory << "/bw_image.jpg";
+    cv::imwrite(path_stream.str(), binarized_image);
+    path_stream.str("");
+
     std::cout << "3. removing noise from image" << std::endl;
     cv::Mat nonoise_image = noise_removal(binarized_image);
-    cv::imwrite("./temp/no_noise.jpg", nonoise_image);
+    path_stream << output_directory << "/no_noise.jpg";
+    cv::imwrite(path_stream.str(), nonoise_image);
+    path_stream.str("");
+
     std::cout << "4. thickening texts" << std::endl;
     cv::Mat dilated_image = thicken_font(nonoise_image);
-    cv::imwrite("./temp/thick.jpg", dilated_image);
+    path_stream << output_directory << "/thick.jpg";
+    cv::imwrite(path_stream.str(), dilated_image);
     return mat_to_numpy(dilated_image); // return the input of the OCR model
 }
 
-py::array_t<uint8_t> process_image_v2(const std::string &imagePath)
+py::array_t<uint8_t> process_image_v2(const std::string &imagePath, const std::string &outputDirectory = "temp1")
 {
     cv::Mat original_image = cv::imread(imagePath, cv::IMREAD_COLOR);
     if (original_image.empty())
     {
         throw std::runtime_error("Could not open or find the image!");
     }
+    std::stringstream path_stream;
+
     std::cout << "0. upscaling image" << std::endl;
     // Define new dimensions (e.g., 3x original size)
     cv::Size new_dimensions(original_image.cols * 3, original_image.rows * 3);
@@ -136,21 +151,29 @@ py::array_t<uint8_t> process_image_v2(const std::string &imagePath)
 
     std::cout << "1. grayscaling image" << std::endl;
     cv::Mat gray_image;
+    path_stream << outputDirectory << "/gray.jpg";
     cv::cvtColor(upscaled_image, gray_image, cv::COLOR_RGB2GRAY);
-    cv::imwrite("./temp/gray.jpg", gray_image);
+    cv::imwrite(path_stream.str(), gray_image);
+    path_stream.str("");
 
     std::cout << "2. applying gaussian blur" << std::endl;
     cv::Mat blurred_image;
     cv::GaussianBlur(gray_image, blurred_image, cv::Point(3, 3), 0);
+    path_stream << outputDirectory << "/blurred.jpg";
+    cv::imwrite(path_stream.str(), blurred_image);
+    path_stream.str("");
 
     std::cout << "3. making black and white image" << std::endl;
     cv::Mat binarized_image;
+    path_stream << outputDirectory << "/bw_image.jpg";
     cv::adaptiveThreshold(blurred_image, binarized_image, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 35, 5);
-    cv::imwrite("./temp/bw_image.jpg", binarized_image);
+    cv::imwrite(path_stream.str(), binarized_image);
+    path_stream.str("");
 
     std::cout << "4. thickening texts" << std::endl;
     cv::Mat thickened_image = thicken_font(binarized_image);
-    cv::imwrite("./temp/thick.jpg", thickened_image);
+    path_stream << outputDirectory << "/thick.jpg";
+    cv::imwrite(path_stream.str(), thickened_image);
     return mat_to_numpy(thickened_image); // return the input of the OCR model
 }
 
@@ -159,5 +182,9 @@ PYBIND11_MODULE(myocr, m)
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
     m.doc() = "Pybind11 module for image processing";
     m.def("process_image", &process_image, "A function to load and process an image")
-        .def("process_image_v2", &process_image_v2, "Alternative function to load and process a more homogenic image with less contrast.");
+        .def("process_image_v2",
+             &process_image_v2,
+             py::arg("imagePath"),
+             py::arg("output_directory") = "temp1",
+             "Alternative function to load and process a more homogenic image with less contrast.");
 }
