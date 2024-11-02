@@ -1,10 +1,18 @@
-import matplotlib.pyplot as plt
 import build.Debug.myocr as myocr
+import time
+import argparse
 
-# Use the C++ function to get a numpy image
-processed_image = myocr.process_image("./image.jpg")
-# Convert BGR to RGB by reversing the last dimension (color channels)
-data_rgb = processed_image[..., ::-1]
-plt.imshow(data_rgb)
-plt.axis('off')
-plt.show()
+parser = argparse.ArgumentParser(
+                    prog='Image processor script',
+                    description='Preprocesses an image for an OCR tool like EasyOCR',)
+parser.add_argument('input', help='Your input image file')
+args = parser.parse_args()
+# Start the timer
+start_time = time.time()
+
+# Run the function
+processed_image = myocr.process_image_v2(args.input)
+
+# Calculate the elapsed time
+elapsed_time = time.time() - start_time
+print(f"Execution time: {elapsed_time:.4f} seconds")
