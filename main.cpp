@@ -81,23 +81,16 @@ cv::Mat remove_borders(const cv::Mat &image)
 py::array_t<uint8_t> mat_to_numpy(const cv::Mat &mat)
 {
     // Ensure the mat is of the correct type
-    if (mat.type() != CV_8UC1 && mat.type() != CV_8UC3)
+    if (mat.type() != CV_8UC1)
     {
         throw std::invalid_argument("Unsupported cv::Mat type");
     }
 
-    // Get the total size of the matrix
-    size_t height = mat.rows;
-    size_t width = mat.cols;
-    size_t channels = mat.channels();
-
-    // Create the correct numpy array based on the number of channels
-    py::array_t<uint8_t> result({height, width, channels}, mat.data);
-
-    return result;
+    // Create the correct numpy array
+    return py::array_t<uint8_t>({mat.rows, mat.cols}, mat.data);
 }
 
-py::array_t<uint8_t> process_image(const std::string &imagePath, const std::string &output_directory = "temp")
+py::array_t<uint8_t> process_image(const std::string &imagePath, const std::string &outputDirectory = "temp")
 {
     cv::Mat original_image = cv::imread(imagePath, cv::IMREAD_COLOR);
     if (original_image.empty())
@@ -110,26 +103,27 @@ py::array_t<uint8_t> process_image(const std::string &imagePath, const std::stri
     std::cout << "1. grayscaling image" << std::endl;
     cv::Mat gray_image;
     cv::cvtColor(original_image, gray_image, cv::COLOR_BGR2GRAY);
-    path_stream << output_directory << "/gray.jpg";
+    path_stream << outputDirectory << "/gray.jpg";
     cv::imwrite(path_stream.str(), gray_image);
     path_stream.str("");
 
     std::cout << "2. making black and white image" << std::endl;
     cv::Mat binarized_image = threshold_image(gray_image, 210, 230);
-    path_stream << output_directory << "/bw_image.jpg";
+    path_stream << outputDirectory << "/bw_image.jpg";
     cv::imwrite(path_stream.str(), binarized_image);
     path_stream.str("");
 
     std::cout << "3. removing noise from image" << std::endl;
     cv::Mat nonoise_image = noise_removal(binarized_image);
-    path_stream << output_directory << "/no_noise.jpg";
+    path_stream << outputDirectory << "/no_noise.jpg";
     cv::imwrite(path_stream.str(), nonoise_image);
     path_stream.str("");
 
     std::cout << "4. thickening texts" << std::endl;
     cv::Mat dilated_image = thicken_font(nonoise_image);
-    path_stream << output_directory << "/thick.jpg";
+    path_stream << outputDirectory << "/thick.jpg";
     cv::imwrite(path_stream.str(), dilated_image);
+    path_stream.str("");
     return mat_to_numpy(dilated_image); // return the input of the OCR model
 }
 
@@ -170,11 +164,13 @@ py::array_t<uint8_t> process_image_v2(const std::string &imagePath, const std::s
     cv::imwrite(path_stream.str(), binarized_image);
     path_stream.str("");
 
-    std::cout << "4. thickening texts" << std::endl;
-    cv::Mat thickened_image = thicken_font(binarized_image);
-    path_stream << outputDirectory << "/thick.jpg";
-    cv::imwrite(path_stream.str(), thickened_image);
-    return mat_to_numpy(thickened_image); // return the input of the OCR model
+    // std::cout << "4. thickening texts" << std::endl;
+    // cv::Mat thickened_image = thicken_font(binarized_image);
+    // path_stream << outputDirectory << "/thick.jpg";
+    // cv::imwrite(path_stream.str(), thickened_image);
+    // path_stream.str("");
+
+    return mat_to_numpy(binarized_image); // return the input of the OCR model
 }
 
 PYBIND11_MODULE(myocr, m)
