@@ -26,7 +26,7 @@ D:\opencv\build\x64\vc16\lib
 ## Configure the build
 
 ```bash
-cmake -DCMAKE_PREFIX_PATH="<pybind_path>\share\cmake\pybind11" -B .\build
+cmake -DCMAKE_PREFIX_PATH="C:\programming\Python311\Lib\site-packages\pybind11\share\cmake\pybind11" -B .\build
 ```
 
 ## Build for Debug
