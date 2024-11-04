@@ -3,6 +3,7 @@ import argparse
 import pytesseract
 import time
 import cv2
+import os
 
 parser = argparse.ArgumentParser(
     prog='main.py',
@@ -20,8 +21,14 @@ parser.add_argument('--bounding', nargs='?', default='false', help='Display boun
 args = parser.parse_args()
 
 # Start the timer
+fname = os.path.splitext(os.path.basename(args.input))[0]
+out_dir_name = f"output_{fname}"
 start_time = time.time()
-myocr.process_image_v2(args.input, "temp")
+if os.path.exists(out_dir_name):
+    print('directory already exists!')
+else:
+    os.mkdir(out_dir_name)
+myocr.process_image_v2(args.input, out_dir_name)
 elapsed_time = time.time() - start_time
 print(f'Time elapsed: {round(elapsed_time * 1000)} ms')
 
