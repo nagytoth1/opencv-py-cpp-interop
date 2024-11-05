@@ -26,7 +26,7 @@ D:\opencv\build\x64\vc16\lib
 ## Configure the build
 
 ```bash
-cmake -DCMAKE_PREFIX_PATH="C:\programming\Python311\Lib\site-packages\pybind11\share\cmake\pybind11" -B .\build
+cmake -B .\build
 ```
 
 ## Build for Debug
@@ -41,7 +41,7 @@ cmake --build .\build
 cmake --build .\build --config Release
 ```
 
-You can find out your specific Pybind11 installation path (`pybind_path`) by using following command: 
+You can find out your specific Pybind11 installation path (`pybind_path`) by using following command:
 
 ```bash
 python -m pybind11 --includes

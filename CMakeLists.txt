@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(myocr)
 
+# Set CMAKE_PREFIX_PATH for pybind11 (change to your specific Pybind11 installation path)
+set(CMAKE_PREFIX_PATH "C:/programming/Python311/Lib/site-packages/pybind11/share/cmake/pybind11" ${CMAKE_PREFIX_PATH})
+
 # Find packages
 find_package(OpenCV REQUIRED)
 find_package(pybind11 REQUIRED)

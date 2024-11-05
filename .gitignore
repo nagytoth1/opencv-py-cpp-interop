@@ -2,3 +2,4 @@ build
 venv
 temp/*.jpg
 input/*.jpg
+output*

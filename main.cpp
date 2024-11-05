@@ -164,10 +164,10 @@ py::array_t<uint8_t> process_image_v2(const std::string &imagePath, const std::s
     cv::imwrite(path_stream.str(), binarized_image);
     path_stream.str("");
 
-    // std::cout << "4. thickening texts" << std::endl;
-    // cv::Mat thickened_image = thicken_font(binarized_image);
-    // path_stream << outputDirectory << "/thick.jpg";
-    // cv::imwrite(path_stream.str(), thickened_image);
+    std::cout << "4. thickening texts" << std::endl;
+    cv::Mat thickened_image = thicken_font(binarized_image);
+    path_stream << outputDirectory << "/thick.jpg";
+    cv::imwrite(path_stream.str(), thickened_image);
     // path_stream.str("");
 
     return mat_to_numpy(binarized_image); // return the input of the OCR model
