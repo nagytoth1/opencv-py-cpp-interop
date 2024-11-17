@@ -26,19 +26,7 @@ D:\opencv\build\x64\vc16\lib
 ## Configure the build
 
 ```bash
-cmake -B .\build
-```
-
-## Build for Debug
-
-```
-cmake --build .\build
-```
-
-## Compile for Release
-
-```
-cmake --build .\build --config Release
+cmake -B -DCMAKE_PREFIX_PATH=<pybind_path>  .\build
 ```
 
 You can find out your specific Pybind11 installation path (`pybind_path`) by using following command:
@@ -49,6 +37,22 @@ python -m pybind11 --includes
 
 The output will be something like this: `-ID:\programs\Python311\Lib\site-packages\pybind11\include`.
 You need to copy the path without the `-I` prefix and the `include` part at the end.
+
+## Build for Debug
+
+If you want to build the Debug target, you can do it with following command:
+
+```
+cmake --build .\build
+```
+
+## Compile for Release
+
+If you want to build the Release target, you can do it with following command:
+
+```
+cmake --build .\build --config Release
+```
 
 ## Run the code
 
