@@ -44,30 +44,33 @@ def non_max_suppression_fast(boxes, overlapThresh):
 # Load YOLO model
 model = YOLO('best.pt')  # Replace 'best.pt' with the path to your trained model
 
-image_path = './output_cover_py/thick.jpg'  # Replace with your image path
+image_path = './output_cover/thick.jpg'  # Replace with your image path
 image = cv2.imread(image_path)
 
 # Use YOLO model to detect license plates
 results = model.predict(source=image, save=False, conf=0.25)
 
+detected_texts = []
 # Process each detected bounding box
 for result in results:
     filtered_boxes = non_max_suppression_fast(np.asarray(result.boxes.xyxy), overlapThresh=0.5)
+    filtered_boxes = sorted(filtered_boxes, key=lambda box: box[1]) # sort by y coordinates from top to bottom approach
     for box in filtered_boxes:
         # Extract bounding box coordinates and convert to integers
         x1, y1, x2, y2 = map(int, box[:4])
 
         # Crop the detected license plate region
         region = image[y1:y2, x1:x2]
-        
+
         # Use PyTesseract to read text from the license plate region
         ocr_result = pytesseract.image_to_string(region, config='--psm 6')  # PSM 7 assumes a single line of text
 
         # Clean the recognized text
-        cleaned_text = ocr_result.strip()
-
-        print(cleaned_text)
-
+        cleaned_text = ocr_result.strip().split('\n') # remove unnecessary characters, line breaks
+        if cleaned_text:
+            for text in cleaned_text:
+                detected_texts.append(text)
         # Draw bounding box and detected text on the original image if matched
-        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(image, cleaned_text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
+        # cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        # cv2.putText(image, cleaned_text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
+    print(detected_texts)
