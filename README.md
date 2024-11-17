@@ -52,6 +52,14 @@ You need to copy the path without the `-I` prefix and the `include` part at the 
 
 ## Run the code
 
+I suggest creating a virtual environment to separate this project's dependencies from your local setup:
+
+```bash
+python -m venv venv
+```
+
+Then you can activate it in Windows with following command: `venv\Scripts\activate.bat` and in Linux like so: `./venv/bin/activate`
+
 When you first try to run the application with `python main.py` you may see the following error coming up, preventing you to launch the application:
 
 ```
