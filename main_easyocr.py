@@ -19,8 +19,8 @@ results = model.predict(source=image, save=False, conf=0.25)
 
 # Process each detected bounding box
 for result in results:
+    result_set = set()
     boxes = result.boxes.xyxy  # Get bounding boxes
-    print(f"THE BOXES: {boxes}")
     detected = False
     for box in boxes:
         if not detected:
@@ -36,15 +36,13 @@ for result in results:
 
         # Use EasyOCR to read text from the region
         ocr_results = reader.readtext(text_rgb)
-
         # Extract and display recognized text for titles, authors, subtitles
         for detection in ocr_results:
-            raw_text = detection[1]  # The detected text is in the second position
-            print("detected text", raw_text)
+            result_set.add(detection[1])
             # Draw bounding box and detected text on the original image
             # cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
             # cv2.putText(image, raw_text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36, 255, 12), 2)
-
+    print(result_set)
 # Save or display the final image with annotations
 # cv2.imshow("Book Cover Text Detection", image)
 # cv2.waitKey(0)
