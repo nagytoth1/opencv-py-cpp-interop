@@ -6,12 +6,6 @@
 
 namespace py = pybind11;
 
-#include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
-#include <opencv2/opencv.hpp>
-
-namespace py = pybind11;
-
 // Function to invert image colors
 cv::Mat invert_image(const cv::Mat &image)
 {
