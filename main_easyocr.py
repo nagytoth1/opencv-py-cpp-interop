@@ -11,7 +11,7 @@ model = YOLO('best.pt')  # Replace 'best.pt' with the path to your trained model
 reader = Reader(['hu'])
 
 # Load the book cover image
-image_path = './output_cover/thick.jpg'  # Replace with your book cover image path
+image_path = './output_470/thick.jpg'  # Replace with your book cover image path
 image = cv2.imread(image_path)
 
 # Use YOLO model to detect text areas on the book cover

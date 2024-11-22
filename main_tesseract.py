@@ -44,10 +44,9 @@ def non_max_suppression_fast(boxes, overlapThresh):
 # Load YOLO model
 model = YOLO('best.pt')  # Replace 'best.pt' with the path to your trained model
 
-image_path = './output_cover/thick.jpg'  # Replace with your image path
+image_path = './output_470/thick.jpg'  # Replace with your image path
 image = cv2.imread(image_path)
 
-# Use YOLO model to detect license plates
 results = model.predict(source=image, save=False, conf=0.25)
 
 detected_texts = []
@@ -59,10 +58,8 @@ for result in results:
         # Extract bounding box coordinates and convert to integers
         x1, y1, x2, y2 = map(int, box[:4])
 
-        # Crop the detected license plate region
         region = image[y1:y2, x1:x2]
 
-        # Use PyTesseract to read text from the license plate region
         ocr_result = pytesseract.image_to_string(region, config='--psm 6')  # PSM 7 assumes a single line of text
 
         # Clean the recognized text
