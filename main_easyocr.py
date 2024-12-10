@@ -2,17 +2,23 @@ import cv2
 import numpy as np
 from easyocr import Reader
 from ultralytics import YOLO
-import re
+import argparse
 
 # Load YOLO model trained for book covers
 model = YOLO('best.pt')  # Replace 'best.pt' with the path to your trained model for book covers
 
 # Initialize EasyOCR reader for text recognition in Hungarian
-reader = Reader(['hu'])
+reader = Reader(['en'])
 
-# Load the book cover image
-image_path = './output_470/thick.jpg'  # Replace with your book cover image path
-image = cv2.imread(image_path)
+parser = argparse.ArgumentParser(
+    prog='main.py',
+    description='Preprocesses an image for an OCR tool like EasyOCR',
+)
+parser.add_argument('-i', '--input', 
+    required=True,
+    help='Your input image file')
+args = parser.parse_args()
+image = cv2.imread(args.input)
 
 # Use YOLO model to detect text areas on the book cover
 results = model.predict(source=image, save=False, conf=0.25)

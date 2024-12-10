@@ -10,11 +10,6 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-i', '--input', 
     required=True,
     help='Your input image file')
-parser.add_argument('-o', '--output', 
-    nargs='?',  # Makes the argument optional
-    help='Your output text file where you want to extract text into'
-)
-parser.add_argument('--bounding', nargs='?', default='false', help='Display bounding box (true or false)')
 
 args = parser.parse_args()
 

@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 import pytesseract
+import argparse
 
 def non_max_suppression_fast(boxes, overlapThresh):
     if len(boxes) == 0:
@@ -44,8 +45,15 @@ def non_max_suppression_fast(boxes, overlapThresh):
 # Load YOLO model
 model = YOLO('best.pt')  # Replace 'best.pt' with the path to your trained model
 
-image_path = './output_470/thick.jpg'  # Replace with your image path
-image = cv2.imread(image_path)
+parser = argparse.ArgumentParser(
+    prog='main.py',
+    description='Preprocesses an image for an OCR tool like EasyOCR',
+)
+parser.add_argument('-i', '--input', 
+    required=True,
+    help='Your input image file')
+args = parser.parse_args()
+image = cv2.imread(args.input)
 
 results = model.predict(source=image, save=False, conf=0.25)
 
